@@ -1,12 +1,23 @@
 version: '3.8'
 services:
-  web-gin:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+  postgres-gin:
+    user: root
+    image: bitnami/postgresql:latest
+    container_name: postgres_web
     volumes:
-      - .:/app
+    - "$HOME/rc_data/postgres/postgres_web:/bitnami/postgresql"
+    ports:
+    - '5432:5432'
+    restart: always
     environment:
-      - GO111MODULE=on
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=web-gin
+    networks:
+      - web-gin-network
+
+volumes:
+  postgres_data:
+
+networks:
+  web-gin-network:
