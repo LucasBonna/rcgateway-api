@@ -8,9 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
+var Db *gorm.DB
+
 func ConnectToDB() {
+	var err error
 	dsn := initializers.Db_conn_str
-	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error connecting to DB")
 	} else {
