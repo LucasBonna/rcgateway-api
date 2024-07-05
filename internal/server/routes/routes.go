@@ -21,6 +21,8 @@ import (
 func RegisterRoutes(r *gin.Engine) {
 	r.Use(middlewares.Logger())
 
+	r.Use(middlewares.ReverseProxy())
+
 	r.GET("/swagger.json", controllers.JsonHandler)
 
 	r.GET("/scalar", controllers.ScalarHandler)
