@@ -1,22 +1,15 @@
-# Configuração de build
+# Config file for Air
 [build]
-  # Comando para construir o binário
-  cmd = "go build -o ./tmp/main.exe ./cmd/api/main.go"
+  # Command to build the app
+  cmd = "go build -o ./tmp/main ./cmd/api/main.go"
   # Binary to watch
-  bin = "./tmp/main.exe"
-  # Diretório de trabalho
+  bin = "./tmp/main"
+  # Working directory
   dir = "."
-  # Extensões de arquivos a serem monitoradas
+  # Patterns to watch
   include_ext = ["go"]
-  # Diretórios a serem excluídos do monitoramento
+  # Exclude files
   exclude_dir = ["vendor"]
 
-# Configuração de log
 [log]
-  # Nível de log (debug, info, warn, error, fatal, panic)
   level = "debug"
-
-# Configuração de hot reload
-[misc]
-  # Limpar o console antes de cada reconstrução
-  clear_on_rebuild = true

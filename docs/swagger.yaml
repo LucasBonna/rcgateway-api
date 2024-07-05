@@ -1,0 +1,20 @@
+info:
+  contact: {}
+paths:
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: Verifica se o servidor está ativo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Ping
+      tags:
+      - ping
+swagger: "2.0"

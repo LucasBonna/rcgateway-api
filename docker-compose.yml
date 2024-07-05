@@ -1,23 +1,33 @@
 version: '3.8'
 services:
-  postgres-gin:
-    user: root
-    image: bitnami/postgresql:latest
-    container_name: postgres_web
-    volumes:
-    - "$HOME/rc_data/postgres/postgres_web:/bitnami/postgresql"
-    ports:
-    - '5432:5432'
-    restart: always
+  api:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+        - "8080:8080"
+      volumes:
+        - .:/app
+      depends_on:
+        - db
+      networks:
+        - rc-services-network
+
+  db:
+    image: postgres:latest
     environment:
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=web-gin
+      POSTGRES_DB: web-gin
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    volumes:
+      - postgres_data:/rcdata/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
-      - web-gin-network
+      - rc-services-network
 
 volumes:
   postgres_data:
 
 networks:
-  web-gin-network:
+  rc-services-network:
