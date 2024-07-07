@@ -7,10 +7,16 @@ import (
 	"web/gin/internal/server"
 )
 
-func init() {
+// @title Web App API
+// @version 1.0
+// @description Esta é a API da Web App.
 
-}
+// @host localhost:8080
+// @BasePath /
 
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	initializers.LoadEnv()
 	database.ConnectToDB()

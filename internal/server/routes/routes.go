@@ -7,17 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-// @title Web App API
-// @version 1.0
-// @description Esta é a API da Web App.
-
-// @host localhost:8080
-// @BasePath /
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 func RegisterRoutes(r *gin.Engine) {
 	r.Use(middlewares.Logger())
 
