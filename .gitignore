@@ -1,2 +1,5 @@
-# Env variables
+# Env Variables
 .env
+
+# Temporary docker files
+tmp
