@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"time"
 	"web/gin/initializers"
 
 	"gorm.io/driver/postgres"
@@ -11,12 +12,24 @@ import (
 var Db *gorm.DB
 
 func ConnectToDB() {
-	var err error
+	const maxRetries = 5
+	const retryDelay = 2 * time.Second
+
 	dsn := initializers.Db_conn_str
-	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Error connecting to DB")
-	} else {
-		log.Println("Successfully connected to DB")
+	for tries := 1; tries <= maxRetries; tries++ {
+		var err error
+		Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if err == nil {
+			log.Println("Successfully connected to DB")
+			return
+		}
+
+		log.Printf("Error connecting to DB (attempt %d/%d): %v", tries, maxRetries, err)
+		if tries < maxRetries {
+			log.Printf("Retrying in %v...", retryDelay)
+			time.Sleep(retryDelay)
+		}
 	}
+
+	log.Fatal("Failed to connect to DB after maximum retries")
 }

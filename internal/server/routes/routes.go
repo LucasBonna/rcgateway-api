@@ -5,6 +5,8 @@ import (
 	"web/gin/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 
@@ -21,9 +23,13 @@ func RegisterRoutes(r *gin.Engine) {
 
 	r.GET("/swagger.json", controllers.JsonHandler)
 
+	r.GET("/swagger", controllers.SwaggerRedirect)
+
+    r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("/merged-docs")))
+
 	r.GET("/scalar", controllers.ScalarHandler)
 
-	v1 := r.Group("/api/v1")
+	v1 := r.Group("/rcgateway")
 	{
 		v1.GET("/ping", controllers.PingHandler)
 	}

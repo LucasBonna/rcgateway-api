@@ -177,3 +177,7 @@ func RedocHandler(c *gin.Context) {
 	c.Header("Content-Type", "text/html")
 	c.String(http.StatusOK, html)
 }
+
+func SwaggerRedirect(c *gin.Context) {
+    c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+}

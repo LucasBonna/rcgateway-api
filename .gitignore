@@ -3,3 +3,6 @@
 
 # Temporary docker files
 tmp
+
+# Temporary docs files
+cmd/docs
