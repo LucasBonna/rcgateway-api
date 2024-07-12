@@ -3,7 +3,6 @@ package middlewares
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"strings"
 	"time"
 	"web/gin/internal/database"
@@ -24,55 +23,51 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 }
 
 func Logger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		t := time.Now()
+    return func(c *gin.Context) {
+        t := time.Now()
 
-		bodyBytes, err := ioutil.ReadAll(c.Request.Body)
-		if err != nil {
-			log.Println("Erro ao ler o corpo da requisição")
-		}
-		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+        requestHeaders := formatHeaders(c.Request.Header)
+        requestQuery := c.Request.URL.RawQuery
+        requestParams := formatParams(c.Params)
 
-		requestParams := formatParams(c.Params)
+        logger := models.Log{
+            ID:             uuid.New(),
+            Ip:             c.ClientIP(),
+            Method:         c.Request.Method,
+            Endpoint:       c.Request.URL.Path,
+            RequestHeaders: &requestHeaders,
+            RequestQuery:   &requestQuery,
+            RequestParams:  &requestParams,
+        }
 
-		requestBody := string(bodyBytes)
-		requestHeaders := formatHeaders(c.Request.Header)
-		requestQuery := c.Request.URL.RawQuery
+        if strings.HasPrefix(c.GetHeader("Content-Type"), "multipart/form-data") {
+            fileUploadMsg := "Multipart form data (file upload)"
+            logger.RequestBody = &fileUploadMsg
+        } else {
+            bodyBytes, _ := ioutil.ReadAll(c.Request.Body)
+            c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+            requestBody := string(bodyBytes)
+            logger.RequestBody = &requestBody
+        }
 
-		logger := models.Log{
-			ID:             uuid.New(),
-			Ip:             c.ClientIP(),
-			Method:         c.Request.Method,
-			Endpoint:       c.Request.URL.Path,
-			RequestBody:    &requestBody,
-			RequestHeaders: &requestHeaders,
-			RequestQuery:   &requestQuery,
-			RequestParams:  &requestParams,
-		}
+        database.Db.Create(&logger)
 
-		if err := database.Db.Create(&logger).Error; err != nil {
-			log.Println("Erro ao criar Log")
-		}
+        blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+        c.Writer = blw
 
-		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-		c.Writer = blw
+        c.Next()
 
-		c.Next()
+        responseTime := time.Since(t).String()
+        responseBody := blw.body.String()
+        responseHeaders := formatHeaders(c.Writer.Header())
 
-		latency := time.Since(t)
-		logger.ResponseTime = latency.String()
-		responseBody := blw.body.String()
-		responseHeaders := formatHeaders(c.Writer.Header())
-		statusCode := c.Writer.Status()
+        logger.ResponseTime = responseTime
+        logger.ResponseBody = &responseBody
+        logger.ResponseHeaders = &responseHeaders
+        logger.StatusCode = c.Writer.Status()
 
-		logger.ResponseBody = &responseBody
-		logger.ResponseHeaders = &responseHeaders
-		logger.StatusCode = statusCode
-
-		if err := database.Db.Model(&logger).Updates(logger).Error; err != nil {
-			log.Println("Erro ao atualizar Log")
-		}
-	}
+        database.Db.Model(&logger).Updates(logger)
+    }
 }
 
 func formatParams(params gin.Params) string {
