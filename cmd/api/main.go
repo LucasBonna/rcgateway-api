@@ -11,8 +11,7 @@ import (
 // @version 1.0
 // @description Esta é a API da Web App.
 
-// @host localhost:8080
-// @BasePath /
+// @host localhost:3333
 
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header

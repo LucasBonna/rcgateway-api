@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 
 // @Summary Ping
 // @Description Verifica se o servidor está ativo
-// @Tags ping
+// @Tags RCGateway-api
 // @Accept json
 // @Produce json
 // @Success 200 {object} map[string]interface{}

@@ -7,10 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+
 func RegisterRoutes(r *gin.Engine) {
+
 	r.Use(middlewares.Logger())
 
 	r.Use(middlewares.ReverseProxy())
+
+	r.GET("/docs", controllers.RedocHandler)
+
+	r.GET("/merged-docs", controllers.MergedDocs)
 
 	r.GET("/swagger.json", controllers.JsonHandler)
 

@@ -1,8 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Esta é a API da Web App.",
+        "title": "Web App API",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "localhost:3333",
     "paths": {
         "/ping": {
             "get": {
@@ -14,7 +18,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "ping"
+                    "RCGateway-api"
                 ],
                 "summary": "Ping",
                 "responses": {
@@ -27,6 +31,13 @@
                     }
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

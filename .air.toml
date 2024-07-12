@@ -1,7 +1,8 @@
 # Config file for Air
 [build]
   # Command to build the app
-  cmd = "go build -o ./tmp/main ./cmd/api/main.go"
+  cmd = "swag init -g ./cmd/api/main.go -o ./cmd/docs"
+  full_bin = "sleep 2 && go build -o ./tmp/main ./cmd/api/main.go && ./tmp/main"
   # Binary to watch
   bin = "./tmp/main"
   # Working directory
@@ -9,7 +10,8 @@
   # Patterns to watch
   include_ext = ["go"]
   # Exclude files
-  exclude_dir = ["vendor"]
+  exclude_dir = ["vendor", "cmd/docs"]
+  delay = 2000
 
 [log]
   level = "debug"

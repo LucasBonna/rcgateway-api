@@ -1,5 +1,9 @@
+host: localhost:3333
 info:
   contact: {}
+  description: Esta é a API da Web App.
+  title: Web App API
+  version: "1.0"
 paths:
   /ping:
     get:
@@ -16,5 +20,10 @@ paths:
             type: object
       summary: Ping
       tags:
-      - ping
+      - RCGateway-api
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
