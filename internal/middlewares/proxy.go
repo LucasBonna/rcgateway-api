@@ -39,6 +39,12 @@ func getPrefix(path string) (string, *url.URL) {
 	} else if strings.HasPrefix(path, "/rcauth/") {
 		target, _ := url.Parse(initializers.RCAUTH)
 		return "/rcauth", target
+	} else if strings.HasPrefix(path, "/rctracker/") {
+		target, _ := url.Parse(initializers.RCTRACKER)
+		return "/rctracker", target
+	} else if strings.HasPrefix(path, "/rcnotifications/") {
+		target, _ := url.Parse(initializers.RCNOTIFICATIONS)
+		return "/rcnotifications", target
 	} else {
 		return path, nil
 	}

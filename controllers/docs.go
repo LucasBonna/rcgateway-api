@@ -27,6 +27,7 @@ type SwaggerDoc struct {
         Schemas map[string]interface{} `json:"schemas"`
     } `json:"components"`
     Tags []interface{} `json:"tags"`
+    Definitions map[string]interface{} `json:"definitions"`
 }
 
 func MergedDocs(c *gin.Context) {
@@ -41,12 +42,13 @@ func MergedDocs(c *gin.Context) {
             Description: "Combined API documentation",
             Version:     "1.0.0",
         },
-        Host:     "localhost:3333",
-        Paths:    make(map[string]interface{}),
+        Host:  "localhost:3333",
+        Paths: make(map[string]interface{}),
         Components: struct {
             Schemas map[string]interface{} `json:"schemas"`
         }{Schemas: make(map[string]interface{})},
-        Tags: []interface{}{},
+        Tags:        []interface{}{},
+        Definitions: make(map[string]interface{}),
     }
 
     // Load local Swagger JSON
@@ -55,12 +57,15 @@ func MergedDocs(c *gin.Context) {
         localDocs.Paths = localSwagger.Paths
         localDocs.Components.Schemas = localSwagger.Components.Schemas
         localDocs.Tags = localSwagger.Tags
+        localDocs.Definitions = localSwagger.Definitions
     }
 
     services := []string{
         "http://localhost:3333/swagger.json",
         "http://rcauth/swagger.json",
         "http://rcstorage-api/swagger.json",
+        "http://rctracker-api/swagger.json",
+        "http://rcnotifications-api/swagger.json",
     }
 
     var wg sync.WaitGroup
@@ -89,11 +94,27 @@ func MergedDocs(c *gin.Context) {
             }
 
             mu.Lock()
+            if localDocs.Paths == nil {
+                localDocs.Paths = make(map[string]interface{})
+            }
             for k, v := range data.Paths {
                 localDocs.Paths[k] = v
             }
-            for k, v := range data.Components.Schemas {
-                localDocs.Components.Schemas[k] = v
+            if localDocs.Components.Schemas == nil {
+                localDocs.Components.Schemas = make(map[string]interface{})
+            }
+            if data.Components.Schemas != nil {
+                for k, v := range data.Components.Schemas {
+                    localDocs.Components.Schemas[k] = v
+                }
+            }
+            if localDocs.Definitions == nil {
+                localDocs.Definitions = make(map[string]interface{})
+            }
+            if data.Definitions != nil {
+                for k, v := range data.Definitions {
+                    localDocs.Definitions[k] = v
+                }
             }
             localDocs.Tags = append(localDocs.Tags, data.Tags...)
             mu.Unlock()
