@@ -66,6 +66,7 @@ func MergedDocs(c *gin.Context) {
         "http://rcstorage-api/swagger.json",
         "http://rctracker-api/swagger.json",
         "http://rcnotifications-api/swagger.json",
+        "http://rcregistry-api/swagger.json",
     }
 
     var wg sync.WaitGroup
