@@ -60,13 +60,14 @@ func MergedDocs(c *gin.Context) {
 		localDocs.Definitions = localSwagger.Definitions
 	}
 
-	services := []string{
-		"http://localhost:3333/swagger.json",
-		"http://rcauth/swagger.json",
-		"http://rcstorage-api/swagger.json",
-		"http://localhost:3363/swagger.json",
-		"http://rcnotifications-api/swagger.json",
-	}
+    services := []string{
+        "http://localhost:3333/swagger.json",
+        "http://rcauth/swagger.json",
+        "http://rcstorage-api/swagger.json",
+        "http://rctracker-api/swagger.json",
+        "http://rcnotifications-api/swagger.json",
+        "http://rcregistry-api/swagger.json",
+    }
 
 	var wg sync.WaitGroup
 	var mu sync.Mutex
