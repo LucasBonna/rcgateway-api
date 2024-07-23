@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"strings"
 	"time"
@@ -22,52 +23,71 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
+func isJSONContentType(contentType string) bool {
+	return strings.HasPrefix(contentType, "application/json")
+}
+
 func Logger() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        t := time.Now()
+	return func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.Path, "/swagger") || c.Request.URL.Path == "/docs" {
+			c.Next()
+			return
+		}
 
-        requestHeaders := formatHeaders(c.Request.Header)
-        requestQuery := c.Request.URL.RawQuery
-        requestParams := formatParams(c.Params)
+		t := time.Now()
 
-        logger := models.Log{
-            ID:             uuid.New(),
-            Ip:             c.ClientIP(),
-            Method:         c.Request.Method,
-            Endpoint:       c.Request.URL.Path,
-            RequestHeaders: &requestHeaders,
-            RequestQuery:   &requestQuery,
-            RequestParams:  &requestParams,
-        }
+		requestHeaders := formatHeaders(c.Request.Header)
+		requestQuery := c.Request.URL.RawQuery
+		requestParams := formatParams(c.Params)
 
-        if strings.HasPrefix(c.GetHeader("Content-Type"), "multipart/form-data") {
-            fileUploadMsg := "Multipart form data (file upload)"
-            logger.RequestBody = &fileUploadMsg
-        } else {
-            bodyBytes, _ := ioutil.ReadAll(c.Request.Body)
-            c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-            requestBody := string(bodyBytes)
-            logger.RequestBody = &requestBody
-        }
+		logger := models.Log{
+			ID:             uuid.New(),
+			Ip:             c.ClientIP(),
+			Method:         c.Request.Method,
+			Endpoint:       c.Request.URL.Path,
+			RequestHeaders: &requestHeaders,
+			RequestQuery:   &requestQuery,
+			RequestParams:  &requestParams,
+		}
 
-        database.Db.Create(&logger)
+		contentType := c.GetHeader("Content-Type")
+		if strings.HasPrefix(contentType, "multipart/form-data") {
+			fileUploadMsg := "Multipart form data (file upload)"
+			logger.RequestBody = &fileUploadMsg
+			nonJSONMsg := fmt.Sprintf("Non-JSON content type: %s", contentType)
+			logger.RequestBody = &nonJSONMsg
+			logger.RequestHeaders = &nonJSONMsg
+			logger.ResponseHeaders = &nonJSONMsg
+			logger.ResponseBody = &nonJSONMsg
+		} else if !isJSONContentType(contentType) {
+			nonJSONMsg := fmt.Sprintf("Non-JSON content type: %s", contentType)
+			logger.RequestBody = &nonJSONMsg
+			logger.RequestHeaders = &nonJSONMsg
+			logger.ResponseHeaders = &nonJSONMsg
+			logger.ResponseBody = &nonJSONMsg
+		} else {
+			bodyBytes, _ := ioutil.ReadAll(c.Request.Body)
+			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		}
 
-        blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-        c.Writer = blw
+		database.Db.Create(&logger)
 
-        c.Next()
+		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = blw
 
-        responseTime := time.Since(t).String()
-        responseBody := blw.body.String()
-        responseHeaders := formatHeaders(c.Writer.Header())
+		c.Next()
 
-        logger.ResponseTime = responseTime
-        logger.ResponseBody = &responseBody
-        logger.ResponseHeaders = &responseHeaders
-        logger.StatusCode = c.Writer.Status()
+		responseTime := time.Since(t).String()
+		responseBody := blw.body.String()
+		responseHeaders := formatHeaders(c.Writer.Header())
 
-        database.Db.Model(&logger).Updates(logger)
-    }
+		logger.ResponseTime = responseTime
+		logger.ResponseBody = &responseBody
+		logger.ResponseHeaders = &responseHeaders
+		logger.StatusCode = c.Writer.Status()
+
+		database.Db.Model(&logger).Updates(logger)
+	}
 }
 
 func formatParams(params gin.Params) string {
