@@ -15,7 +15,7 @@ func ConnectToDB() {
 	const maxRetries = 5
 	const retryDelay = 2 * time.Second
 
-	dsn := initializers.Db_conn_str
+	dsn := initializers.DbConnStr
 	for tries := 1; tries <= maxRetries; tries++ {
 		var err error
 		Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})

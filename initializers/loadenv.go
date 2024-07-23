@@ -7,13 +7,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var Port string
-var Db_conn_str string
-var RCGATEWAY string
-var RCAUTH string
-var RCSTORAGE string
-var RCTRACKER string
-var RCNOTIFICATIONS string
+var (
+	Port            string
+	DbConnStr       string
+	RCGATEWAY       string
+	RCAUTH          string
+	RCSTORAGE       string
+	RCTRACKER       string
+	RCNOTIFICATIONS string
+	RCREGISTRY      string
+)
 
 func LoadEnv() {
 	err := godotenv.Load()
@@ -22,10 +25,11 @@ func LoadEnv() {
 	}
 
 	Port = os.Getenv("PORT")
-	Db_conn_str = os.Getenv("DB_CONN_STR")
+	DbConnStr = os.Getenv("DBCONNSTR")
 	RCGATEWAY = os.Getenv("RCGATEWAY")
 	RCAUTH = os.Getenv("RCAUTH")
 	RCSTORAGE = os.Getenv("RCSTORAGE")
 	RCTRACKER = os.Getenv("RCTRACKER")
 	RCNOTIFICATIONS = os.Getenv("RCNOTIFICATIONS")
+	RCREGISTRY = os.Getenv("RCREGISTRY")
 }

@@ -60,14 +60,14 @@ func MergedDocs(c *gin.Context) {
 		localDocs.Definitions = localSwagger.Definitions
 	}
 
-    services := []string{
-        "http://localhost:3333/swagger.json",
-        "http://rcauth/swagger.json",
-        "http://rcstorage-api/swagger.json",
-        "http://rctracker-api/swagger.json",
-        "http://rcnotifications-api/swagger.json",
-        "http://rcregistry-api/swagger.json",
-    }
+	services := []string{
+		"http://localhost:3333/swagger.json",
+		"http://rcauth/swagger.json",
+		"http://rcstorage-api/swagger.json",
+		"http://rctracker-api/swagger.json",
+		"http://rcnotifications-api/swagger.json",
+		"http://rcregistry-api/swagger.json",
+	}
 
 	var wg sync.WaitGroup
 	var mu sync.Mutex
@@ -83,7 +83,7 @@ func MergedDocs(c *gin.Context) {
 			}()
 			resp, err := client.Get(url)
 			if err != nil {
-				log.Printf("Failed loading docs from %s: %v", url, err)
+				log.Printf("failed loading docs from %s: %v", url, err)
 				return
 			}
 			defer resp.Body.Close()
@@ -136,7 +136,12 @@ func MergedDocs(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 	jsonData, _ := json.Marshal(localDocs)
 	c.Header("Content-Length", fmt.Sprintf("%d", len(jsonData)))
-	c.Writer.Write(jsonData)
+	_, err = c.Writer.Write(jsonData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Internal server error",
+		})
+	}
 }
 
 func loadLocalSwagger() (SwaggerDoc, error) {
@@ -201,4 +206,3 @@ func RedocHandler(c *gin.Context) {
 func SwaggerRedirect(c *gin.Context) {
 	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 }
-
