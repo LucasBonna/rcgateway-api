@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http/httputil"
 	"net/url"
+	"rc/gateway/initializers"
 	"strings"
-	"web/gin/initializers"
 
 	"github.com/gin-gonic/gin"
 )

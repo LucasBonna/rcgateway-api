@@ -2,8 +2,8 @@ package database
 
 import (
 	"log"
+	"rc/gateway/initializers"
 	"time"
-	"web/gin/initializers"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

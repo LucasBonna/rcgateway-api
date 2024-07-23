@@ -1,10 +1,11 @@
 package migrations
 
 import (
-	"web/gin/internal/database"
-	"web/gin/internal/database/models"
+	"rc/gateway/internal/database"
+	"rc/gateway/internal/database/models"
 )
 
 func MigrateModels() {
 	database.Db.AutoMigrate(&models.Log{})
 }
+

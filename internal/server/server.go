@@ -1,8 +1,8 @@
 package server
 
 import (
-	"web/gin/initializers"
-	"web/gin/internal/server/routes"
+	"rc/gateway/initializers"
+	"rc/gateway/internal/server/routes"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -11,13 +11,14 @@ import (
 func Start() {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-        AllowAllOrigins:  true,
-        AllowMethods:     []string{"PUT", "PATCH", "DELETE", "POST", "GET", "HEAD"},
-        AllowHeaders:     []string{"Origin"},
-        AllowCredentials: true,
-    }))
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"PUT", "PATCH", "DELETE", "POST", "GET", "HEAD"},
+		AllowHeaders:     []string{"Origin"},
+		AllowCredentials: true,
+	}))
 
 	routes.RegisterRoutes(r)
 
 	r.Run(":" + initializers.Port)
 }
+

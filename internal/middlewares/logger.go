@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"rc/gateway/internal/database"
+	"rc/gateway/internal/database/models"
 	"strings"
 	"time"
-	"web/gin/internal/database"
-	"web/gin/internal/database/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

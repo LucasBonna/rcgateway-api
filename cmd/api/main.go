@@ -1,15 +1,15 @@
 package main
 
 import (
-	"web/gin/initializers"
-	"web/gin/internal/database"
-	"web/gin/internal/database/migrations"
-	"web/gin/internal/server"
+	"rc/gateway/initializers"
+	"rc/gateway/internal/database"
+	"rc/gateway/internal/database/migrations"
+	"rc/gateway/internal/server"
 )
 
-// @title Web App API
+// @title RCGateway App API
 // @version 1.0
-// @description Esta é a API da Web App.
+// @description Esta é a API da RCGateway App.
 
 // @host localhost:3333
 
@@ -22,3 +22,4 @@ func main() {
 	migrations.MigrateModels()
 	server.Start()
 }
+

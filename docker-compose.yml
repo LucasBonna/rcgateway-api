@@ -1,22 +1,22 @@
-version: '3.8'
+version: "3.8"
 services:
   api:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      ports:
-        - "3333:3333"
-      volumes:
-        - .:/app
-      depends_on:
-        - db
-      networks:
-        - rc-services-network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - rc-services-network
 
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: web-gin
+      POSTGRES_DB: rcgateway
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
     volumes:
@@ -31,3 +31,4 @@ volumes:
 
 networks:
   rc-services-network:
+

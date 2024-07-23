@@ -1,4 +1,4 @@
-module web/gin
+module rc/gateway
 
 go 1.22.1
 
