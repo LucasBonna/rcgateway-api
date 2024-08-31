@@ -42,7 +42,7 @@ func MergedDocs(c *gin.Context) {
 			Description: "Combined API documentation",
 			Version:     "1.0.0",
 		},
-		Host:  "localhost:3333",
+		Host:  "localhost:8000",
 		Paths: make(map[string]interface{}),
 		Components: struct {
 			Schemas map[string]interface{} `json:"schemas"`
@@ -61,12 +61,8 @@ func MergedDocs(c *gin.Context) {
 	}
 
 	services := []string{
-		"http://localhost:3333/swagger.json",
-		"http://rcauth/swagger.json",
-		"http://rcstorage-api/swagger.json",
-		"http://rctracker-api/swagger.json",
-		"http://rcnotifications-api/swagger.json",
-		"http://rcregistry-api/swagger.json",
+		"http://localhost:8000/swagger.json",
+		"http://crawler-api/api-docs",
 	}
 
 	var wg sync.WaitGroup
@@ -156,9 +152,9 @@ func loadLocalSwagger() (SwaggerDoc, error) {
 
 func ScalarHandler(c *gin.Context) {
 	htmlContent, err := scalar.ApiReferenceHTML(&scalar.Options{
-		SpecURL: "http://localhost:3333/merged-docs",
+		SpecURL: "http://localhost:8000/merged-docs",
 		CustomOptions: scalar.CustomOptions{
-			PageTitle: "Simple API",
+			PageTitle: "EcomHub API",
 		},
 		DarkMode: true,
 	})

@@ -26,9 +26,8 @@ func RegisterRoutes(r *gin.Engine) {
 
 	r.GET("/scalar", controllers.ScalarHandler)
 
-	v1 := r.Group("/rcgateway")
+	v1 := r.Group("/ehgateway")
 	{
 		v1.GET("/ping", controllers.PingHandler)
 	}
 }
-

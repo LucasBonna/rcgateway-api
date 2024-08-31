@@ -33,21 +33,9 @@ func ReverseProxy() gin.HandlerFunc {
 }
 
 func getPrefix(path string) (string, *url.URL) {
-	if strings.HasPrefix(path, "/rcstorage/") {
-		target, _ := url.Parse(initializers.RCSTORAGE)
-		return "/rcstorage", target
-	} else if strings.HasPrefix(path, "/rcauth/") {
-		target, _ := url.Parse(initializers.RCAUTH)
-		return "/rcauth", target
-	} else if strings.HasPrefix(path, "/rctracker/") {
-		target, _ := url.Parse(initializers.RCTRACKER)
-		return "/rctracker", target
-	} else if strings.HasPrefix(path, "/rcnotifications/") {
-		target, _ := url.Parse(initializers.RCNOTIFICATIONS)
-		return "/rcnotifications", target
-	} else if strings.HasPrefix(path, "/rcregistry/") {
-		target, _ := url.Parse(initializers.RCREGISTRY)
-		return "/rcregistry", target
+	if strings.HasPrefix(path, "/ehcrawler/") {
+		target, _ := url.Parse(initializers.EHCRAWLER)
+		return "/ehcrawler", target
 	} else {
 		return path, nil
 	}

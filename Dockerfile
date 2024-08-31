@@ -14,6 +14,6 @@ COPY . .
 
 RUN swag init -g ./cmd/api/main.go -o ./cmd/docs
 
-EXPOSE 3333
+EXPOSE 8000
 
 CMD ["air", "-c", ".air.toml"]

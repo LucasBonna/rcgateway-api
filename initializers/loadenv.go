@@ -8,14 +8,10 @@ import (
 )
 
 var (
-	Port            string
-	DbConnStr       string
-	RCGATEWAY       string
-	RCAUTH          string
-	RCSTORAGE       string
-	RCTRACKER       string
-	RCNOTIFICATIONS string
-	RCREGISTRY      string
+	Port      string
+	DbConnStr string
+	EHGATEWAY string
+	EHCRAWLER string
 )
 
 func LoadEnv() {
@@ -26,10 +22,6 @@ func LoadEnv() {
 
 	Port = os.Getenv("PORT")
 	DbConnStr = os.Getenv("DBCONNSTR")
-	RCGATEWAY = os.Getenv("RCGATEWAY")
-	RCAUTH = os.Getenv("RCAUTH")
-	RCSTORAGE = os.Getenv("RCSTORAGE")
-	RCTRACKER = os.Getenv("RCTRACKER")
-	RCNOTIFICATIONS = os.Getenv("RCNOTIFICATIONS")
-	RCREGISTRY = os.Getenv("RCREGISTRY")
+	EHGATEWAY = os.Getenv("EHGATEWAY")
+	EHCRAWLER = os.Getenv("EHCRAWLER")
 }

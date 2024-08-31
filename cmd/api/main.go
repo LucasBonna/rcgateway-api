@@ -7,11 +7,11 @@ import (
 	"rc/gateway/internal/server"
 )
 
-// @title RCGateway App API
+// @title EHGateway App API
 // @version 1.0
-// @description Esta é a API da RCGateway App.
+// @description Esta é a API da EHGateway App.
 
-// @host localhost:3333
+// @host localhost:8000
 
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
@@ -22,4 +22,3 @@ func main() {
 	migrations.MigrateModels()
 	server.Start()
 }
-
